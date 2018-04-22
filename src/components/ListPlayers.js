@@ -4,17 +4,15 @@ import PlayerListing from './PlayerListing'
 class ListPlayers extends React.Component {
 
     render() {
-        console.log(this.props.players)
-        console.log(this.props.removePlayer)
         return(
             <div>
                 <ul>
-                    {Object.keys(this.props.players).map(key => 
+                    {this.props.players.map((player,index) => 
                         <PlayerListing
-                             playerName={this.props.players[key].Name} 
+                             playerName={player.Name} 
                              removePlayer={this.props.removePlayer}
-                             playerNum={key}
-                             key={key} 
+                             playerNum={index}
+                             key={index} 
                     />)}
                 </ul>
             </div>

@@ -7,34 +7,35 @@ import ListPlayers from './components/ListPlayers'
 class App extends React.Component {
 
   state = {
-    players: {},
+    players: [],
     numPlayers: 0
   }
 
   addPlayer = player => {
-    const tmpplayers = {...this.state.players};
-    const cur = this.state.numPlayers;
-    tmpplayers[cur]=player;
-    this.setState({players:tmpplayers, numPlayers:cur+1})
+    this.setState({players: [...this.state.players, player]});
   }
 
-  removePlayer = playerNum => {
-    console.log(playerNum)
-    const tmpplayers = {...this.state.players};
-    delete tmpplayers[playerNum]
-    this.setState({players:tmpplayers})
+  removePlayer = index => {
+    console.log(this.state.players)
+    this.setState((prevState) => ({
+       players : prevState.players.filter((_,i) => i !== index)
+      }));
   }
 
   render() {
+    console.log(this.state.players.length>=5)
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <AddPlayer addPlayer={this.addPlayer}/>
+        <AddPlayer addPlayer={this.addPlayer}
+          canAddMore={this.state.players.length>=5}
+        />
         <ListPlayers players={this.state.players} removePlayer={this.removePlayer}/>
-      </div>
+        {this.state.players.length>=5 ? <button>Shall we play a game?</button> : null }
+      </div>  
     );
   }
 }

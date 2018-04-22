@@ -16,8 +16,10 @@ class AddPlayer extends React.Component {
     render() {
         return(
             <form onSubmit={this.addPlayer} >
-                <input name="name" className="addPlayerInput" ref={this.nameref} placeholder='Name' type="text" />
-                <button type="submit">Add</button>
+                <input name="name" className="addPlayerInput" ref={this.nameref} 
+                placeholder='Name' type="text"
+                disabled={this.props.canAddMore} />
+                <button type="submit" disabled={this.props.canAddMore}>Add</button>
             </form>
         )
     }
