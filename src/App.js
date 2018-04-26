@@ -73,6 +73,7 @@ class App extends React.Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+        <div>Build 1</div>
         <AddPlayer addPlayer={this.addPlayer}
           canAddMore={this.state.players.length>=5}
         />
