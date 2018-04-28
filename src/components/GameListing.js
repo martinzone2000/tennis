@@ -11,10 +11,14 @@ class GameListing extends React.Component {
         var bench = this.props.game.Bench.Name;
         return (
             <tr>
-                <td>{server}</td>
-                <td>{teammate}</td>
-                <td>{opp1}</td>
-                <td>{opp2}</td>
+                <td onClick={() => this.props.setWinner(this.props.index,false)}>
+                    <td>{server}</td>
+                    <td>{teammate}</td>
+                </td>
+                <td onClick={() => this.props.setWinner(this.props.index,true)}>
+                    <td>{opp1}</td>
+                    <td>{opp2}</td>
+                </td>
                 <td>{bench}</td>
             </tr>
         )
