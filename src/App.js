@@ -6,6 +6,7 @@ import ListPlayers from './components/ListPlayers'
 import ShowBrackets from './components/ShowBrackets'
 import ShowScores from './components/ShowScores'
 import CurrentGame from './components/CurrentGame'
+import Router from "./components/Router"
 
 class App extends React.Component {
 
@@ -68,6 +69,8 @@ class App extends React.Component {
     flights = flights.concat(this.getRound(b,[4,3,2], 'South', 'North'))
 
     this.setState({games:flights, CurrentGame:0})
+
+
     console.log(flights);
   }
 
@@ -79,7 +82,12 @@ class App extends React.Component {
     console.log(game)
 
     var adj=0
-    if(game.Winner != 0) {
+
+    if(game.Winner === 1 && inservice) return //already scored
+    if(game.Winner === 2 && !inservice) return //already scored
+
+    if(game.Winner !== 0) {
+      //changing the score
       adj=-1;
     }
 
@@ -109,18 +117,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Welcome to RasNewton</h1>
         </header>
-        <div>Build 1</div>
-        <AddPlayer addPlayer={this.addPlayer}
-          canAddMore={this.state.players.length>=5}
-        />
-        <ListPlayers players={this.state.players} removePlayer={this.removePlayer}/>
-        {this.state.players.length>=5 ? <button onClick={this.startGame}>Shall we play a game?</button> : null }
-        <ShowBrackets games={this.state.games} setWinner={this.winner}/>
-        <ShowScores players={this.state.players}/>
-        <CurrentGame game={this.state.games[this.state.CurrentGame]} current={this.state.CurrentGame} setWinner={this.winner} nextGame={this.nextGame}/>
+        <Router app={this} />
       </div>  
     );
   }

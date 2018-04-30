@@ -1,4 +1,5 @@
 import React from 'react'
+import '../App.css';
 
 class GameListing extends React.Component {
     render() {
@@ -9,15 +10,17 @@ class GameListing extends React.Component {
         var opp1 = this.props.game.Opp1.Name;
         var opp2 = this.props.game.Opp2.Name;
         var bench = this.props.game.Bench.Name;
+        var spacer = this.props.index % 5 == 0 ? "spacer":"";
         return (
-            <tr>
-                <td onClick={() => this.props.setWinner(this.props.index,false)}>
-                    <td>{server}</td>
-                    <td>{teammate}</td>
+            <tr className={spacer}>
+                <td>{this.props.index+1}</td>
+                <td onClick={() => this.props.winner(this.props.index,false)}>
+                    <span className="server">{server}</span>
+                    <span>{teammate}</span>
                 </td>
-                <td onClick={() => this.props.setWinner(this.props.index,true)}>
-                    <td>{opp1}</td>
-                    <td>{opp2}</td>
+                <td onClick={() => this.props.winner(this.props.index,true)}>
+                    <span>{opp1}</span>
+                    <span>{opp2}</span>
                 </td>
                 <td>{bench}</td>
             </tr>

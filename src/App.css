@@ -22,7 +22,65 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
+.server {
+  background-color: yellow
+}
+
+table tr.spacer td {
+  padding-top:2em;
+}
+
+.score {
+  float: left;
+  width:20%;
+  outline: black 1px solid
+}
+
+.scorebox {
+  width:60%;
+  margin: 0 20% 0 20%;
+  display: inline-block;
+}
+
+.court{
+  width:60%;
+  margin: 0 20% 0 20%;
+  background-color: lightgreen
+}
+
+.side {
+  width:100%;
+  float: left;
+}
+
+.sideTitle {
+  width:100%;
+  outline: black 1px solid;
+  font-weight: bold;
+  height: 3em;
+  vertical-align: middle;
+  line-height: 3em;
+}
+
+.server {
+  background-color: yellow;
+}
+
+.player {
+  width:50%;
+  float: left;
+  height: 5em;
+  font-size: x-large;
+  vertical-align: middle;
+  line-height: 5em;
+}
+
+.scorebox div {
+  padding: .5em 0 .5em 0
+}
+
+
+@keyframes App-logo-spin {Ks
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }

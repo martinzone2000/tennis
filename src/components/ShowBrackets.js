@@ -1,5 +1,6 @@
 import React from 'react'
 import GameListing from './GameListing';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class ShowBrackets extends React.Component {
 
@@ -8,20 +9,14 @@ class ShowBrackets extends React.Component {
         console.log(this.props)
         return (
             <div>
+                <Link to="/current/">Current Game</Link>
                 <table>
-                    <tr>
-                        <th>Server</th>
-                        <th>Server Team Mate</th>
-                        <th>OOS 1</th>
-                        <th>OOS 2</th>
-                        <th>Bench</th>
-                    </tr>
-                    {this.props.games.map((game,index) => 
+                    {this.props.app.state.games.map((game,index) => 
                         <GameListing
                              game={game} 
                              index={index}
                              key={index} 
-                             setWinner={this.props.setWinner}
+                             setWinner={this.props.app.setWinner}
                     />)}
                 </table>
             </div>

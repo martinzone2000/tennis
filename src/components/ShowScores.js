@@ -4,9 +4,9 @@ class ShowScores extends React.Component {
     render() {
         console.log(this.props)
         return (
-            <div>
+            <div className="scorebox">
                 {this.props.players.map((player) => {
-                    return <p>{player.Name}  {player.Score}</p>
+                    return (<div className="score"><div>{player.Name}</div><div>{player.Score}</div></div>)
                 })}
             </div>
         )
