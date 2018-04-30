@@ -116,13 +116,11 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {/* <header className="App-header">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to RasNewton</h1>
-        </header> */}
-        <header></header>
-        <body>
-          <Router app={this} />
-        </body>
+        </header>
+        <Router app={this} />
       </div>  
     );
   }
