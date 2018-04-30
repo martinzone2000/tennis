@@ -120,7 +120,9 @@ class App extends React.Component {
           <h1 className="App-title">Welcome to RasNewton</h1>
         </header> */}
         <header></header>
-        <Router app={this} />
+        <body>
+          <Router app={this} />
+        </body>
       </div>  
     );
   }
