@@ -79,8 +79,12 @@ table tr.spacer td {
   padding: .5em 0 .5em 0
 }
 
+form {
+  padding-top: 30px;
+}
 
-@keyframes App-logo-spin {Ks
+
+@keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
