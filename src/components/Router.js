@@ -17,6 +17,9 @@ class Router extends React.Component {
                     <Route exact path="/" component={(props) => <AddPlayer {...props} {...this.props}/>} />
                     <Route path="/games/" component={(props) => <ShowBrackets {...props} {...this.props}/>} />
                     <Route path="/current/" component={(props) => <CurrentGame {...props} {...this.props}/>}  />
+                    <Route exact path="/tennis/" component={(props) => <AddPlayer {...props} {...this.props}/>} />
+                    <Route path="/tennis/games/" component={(props) => <ShowBrackets {...props} {...this.props}/>} />
+                    <Route path="/tennis/current/" component={(props) => <CurrentGame {...props} {...this.props}/>}  />
                 </Switch>
             </BrowserRouter>
         )
