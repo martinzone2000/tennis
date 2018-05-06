@@ -74,22 +74,43 @@ class App extends React.Component {
     console.log(flights);
   }
 
-  winner = (index, inservice) => {
+  winner = (index, inservice, autoadvance) => {
     console.log("winner is "+ index+ "  " + inservice)
     var g = [...this.state.games]
     var game = g[index]
-    console.log(g)
+    console.log(this.state.CurrentGame)
     console.log(game)
+
+    if(index > this.state.CurrentGame) return;
 
     var adj=0
 
-    if(game.Winner === 1 && inservice) return //already scored
-    if(game.Winner === 2 && !inservice) return //already scored
+    if(game.Winner === 1 && inservice) {
+      //reset the game to no winner
+      game.Winner = 0
+      game.Server.Score=game.Server.Score-1
+      game.TeamMate.Score=game.TeamMate.Score-1
+      //this.autoAdvance(autoadvance, index)
+      this.setState({games:g})
+      return
+     }
+
+    if(game.Winner === 2 && !inservice) {
+      //reset the game to no winner
+      game.Winner = 0
+      game.Opp1.Score=game.Opp1.Score-1
+      game.Opp2.Score=game.Opp2.Score-1
+      //this.autoAdvance(autoadvance, index)
+      this.setState({games:g})
+      return
+     }
+
 
     if(game.Winner !== 0) {
       //changing the score
       adj=-1;
     }
+
 
     if(inservice) {
       game.Winner = 1
@@ -105,12 +126,20 @@ class App extends React.Component {
       game.Opp1.Score=game.Opp1.Score+1
       game.Opp2.Score=game.Opp2.Score+1    
     }
+    this.autoAdvance(autoadvance, index)
     this.setState({games:g})
   }
 
   nextGame = () => {
     var cur = this.state.CurrentGame+1;
     this.setState({CurrentGame:cur})
+  }
+
+  autoAdvance = (auto, index) => {
+    var cur = this.state.CurrentGame
+    if(index==cur && auto) {
+      this.setState({CurrentGame:cur+1})
+    }
   }
 
   render() {

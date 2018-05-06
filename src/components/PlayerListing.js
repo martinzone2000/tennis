@@ -8,9 +8,11 @@ class PlayerListing extends React.Component {
 
     render() {
         return (
-            <div>
-                <span>{this.props.playerName}</span>
-                <button onClick={this.removePlayer} >Remove</button>
+            <div className="playerRow">
+                <div className="playerItem playerName">{this.props.playerName}</div>
+                <div className="playerItem deletePlayer">
+                    <button onClick={this.removePlayer} >Remove</button>
+                </div>
             </div>
         )
     }

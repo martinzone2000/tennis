@@ -22,17 +22,22 @@ class AddPlayer extends React.Component {
         this.props.history.push('/current/');
     }
 
+    isFull = (players) => {
+        return players.length >= 5
+    }
+
 
     render() {
         console.log("add player")
         console.log(this.props)
+        var full = this.isFull(this.props.app.state.players)
         return(
             <div>
                 <form onSubmit={this.addPlayer} >
                     <input name="name" className="addPlayerInput" ref={this.nameref} 
                     placeholder='Name' type="text"
-                    disabled={false} />
-                    <button type="submit" disabled={this.props.app.canAddMore}>Add</button>
+                    disabled={full}/>
+                    <button type="submit" disabled={full}>Add</button>
                 </form>
                 <ListPlayers players={this.props.app.state.players} removePlayer={this.props.app.removePlayer}/>
                 {this.props.app.state.players.length>=5 ? <button onClick={this.startGame}>Shall we play a game?</button> : null }

@@ -5,16 +5,14 @@ class ListPlayers extends React.Component {
 
     render() {
         return(
-            <div>
-                <ul>
-                    {this.props.players.map((player,index) => 
-                        <PlayerListing
-                             playerName={player.Name} 
-                             removePlayer={this.props.removePlayer}
-                             playerNum={index}
-                             key={index} 
-                    />)}
-                </ul>
+            <div className="player-grid">
+                {this.props.players.map((player,index) => 
+                    <PlayerListing
+                            playerName={player.Name} 
+                            removePlayer={this.props.removePlayer}
+                            playerNum={index}
+                            key={index} 
+                />)}
             </div>
         )
     }

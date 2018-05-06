@@ -10,18 +10,19 @@ class GameListing extends React.Component {
         var opp1 = this.props.game.Opp1.Name;
         var opp2 = this.props.game.Opp2.Name;
         var bench = this.props.game.Bench.Name;
-        var spacer = this.props.index % 5 == 0 ? "spacer":"";
+        var spacer = this.props.index % 5 == 0 ? "spacer row":"row";
+        var wc1 = this.props.game.Winner==1 ? "winner" : "";
+        var wc2 = this.props.game.Winner==2 ? "winner" : "";
+        var status = this.props.game.Winner==0 ? "notPlayed" : "";
+        var rowclass= spacer+' '+status
         return (
-            <tr className={spacer}>
+            <tr className={rowclass}>
                 <td>{this.props.index+1}</td>
-                <td onClick={() => this.props.winner(this.props.index,false)}>
-                    <span className="server">{server}</span>
-                    <span>{teammate}</span>
-                </td>
-                <td onClick={() => this.props.winner(this.props.index,true)}>
-                    <span>{opp1}</span>
-                    <span>{opp2}</span>
-                </td>
+                <td>{this.props.game.InSide}</td>
+                <td className={wc1} onClick={() => this.props.setWinner(this.props.index,true,true)}>{server}</td>
+                <td className={wc1} onClick={() => this.props.setWinner(this.props.index,true,true)}>{teammate}</td>
+                <td className={wc2} onClick={() => this.props.setWinner(this.props.index,false,true)}>{opp1}</td>
+                <td className={wc2} onClick={() => this.props.setWinner(this.props.index,false,true)}>{opp2}</td>
                 <td>{bench}</td>
             </tr>
         )
