@@ -132,6 +132,10 @@ class App extends React.Component {
 
   nextGame = () => {
     var cur = this.state.CurrentGame+1;
+    if(cur >= this.state.games.length) {
+      //you are done
+      return;
+    }
     this.setState({CurrentGame:cur})
   }
 

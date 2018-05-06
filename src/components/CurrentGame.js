@@ -13,7 +13,7 @@ class CurrentGame extends React.Component {
         console.log(this.props)
         var cur = this.props.app.state.CurrentGame
         var game = this.props.app.state.games[this.props.app.state.CurrentGame]
-        var ngd = game.Winner == 0;
+        var ngd = game.Winner == 0 || cur >= this.props.app.state.games.lenth;
         var inWinner = game.Winner == 1 ? " gameWinner":""
         var outWinner = game.Winner == 2 ? " gameWinner":""
         if(game.InSide=="North")
