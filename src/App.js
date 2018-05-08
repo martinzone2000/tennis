@@ -142,7 +142,7 @@ class App extends React.Component {
   autoAdvance = (auto, index) => {
     var cur = this.state.CurrentGame
     if(index==cur && auto) {
-      this.setState({CurrentGame:cur+1})
+      this.nextGame();
     }
   }
 
