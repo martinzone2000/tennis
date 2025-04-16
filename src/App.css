@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  animation: App-logo-throb infinite 3s ease-in-out; /* Adjust duration as needed */
+  animation: App-logo-heartthrob infinite 1.5s ease-in-out; /* Adjust duration as needed */
   height: 80px; /* Keep the height fixed */
   display: inline-block; /* Ensure it stays inline with text */
 }
@@ -175,4 +175,14 @@ spaceBelow {
   0% { transform: scale(1); }       /* Normal size */
   50% { transform: scale(1.33); }  /* 33% larger */
   100% { transform: scale(1); }    /* Back to normal size */
+}
+
+@keyframes App-logo-heartthrob {
+  0% { transform: scale(1); }         /* Normal size */
+  7% { transform: scale(1); }         /* Normal size */
+  20% { transform: scale(1.35); }      /* First pulse */
+  30% { transform: scale(1); }        /* Back to normal */
+  40% { transform: scale(1.2); }      /* Second pulse */
+  60% { transform: scale(1); }        /* Back to normal */
+  100% { transform: scale(1); }       /* Pause at normal size */
 }
