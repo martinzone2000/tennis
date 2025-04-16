@@ -148,7 +148,7 @@ class App extends React.Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to RasNewton</h1>
-          <h2 className="App-intro"> The '5 player' game scheduler</h2>
+          <h2 className="App-intro"> The '5 player' game planner</h2>
         </header>
         <Router app={this} />
       </div>  

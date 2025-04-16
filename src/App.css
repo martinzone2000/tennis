@@ -58,11 +58,10 @@ table tr.spacer td {
 }
 
 .court{
-  width:90%;
-  margin: 0 5% 0 5%;
+  width:97%;
+  margin: 0 auto 0 auto;
   background-color: lightgreen;
   outline: black 1px solid;
-  margin-bottom: 3em;
   border-radius: 10px 10px 0 0; 
 
 }
@@ -126,7 +125,7 @@ form {
 
 .net {
   background-color: white;
-  line-height: 1.5em;
+  line-height: 2em;
   width: 100%;
 }
 
