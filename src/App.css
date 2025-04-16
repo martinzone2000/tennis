@@ -10,9 +10,12 @@
 
 .App-header {
   background-color: #61d9fa;
-  height: 190px;
+  height: 170px;
   padding: 20px;
   color: white;
+  margin: 2% auto; /* Center the current game container */
+  width: 90%; /* Set a fixed width for the current game container */
+  border-radius: 10px; /* Rounded corners */
 }
 
 .App-title {
@@ -20,9 +23,20 @@
 }
 
 .App-intro {
-  font-size: large;
+  font-size: 1.25em;
+  line-height: 5px;
 }
 
+
+.current-game-container  {
+  margin: 2% auto; /* Center the current game container */
+  width: 95%; /* Set a fixed width for the current game container */
+  background-color: #f0f0f0; /* Light gray background for contrast */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  padding-bottom: 3em;
+  padding-top: 2%;
+}
 .server {
   background-color: yellow
 }
@@ -49,6 +63,8 @@ table tr.spacer td {
   background-color: lightgreen;
   outline: black 1px solid;
   margin-bottom: 3em;
+  border-radius: 10px 10px 0 0; 
+
 }
 
 .side {
@@ -57,7 +73,7 @@ table tr.spacer td {
   outline: black 1px solid;
 }
 
-.sideTitle {
+.sideTitleTop {
   width:100%;
   outline: black 1px solid;
   font-weight: bold;
@@ -68,6 +84,21 @@ table tr.spacer td {
   background-color:darkgreen;
   font-size: large;
   color: white;
+  border-radius: 10px 10px 0 0; /* Rounded corners for the top */
+}
+
+.sideTitleBottom {
+  width:100%;
+  outline: black 1px solid;
+  font-weight: bold;
+  height: 3em;
+  vertical-align: middle;
+  line-height: 3em;
+  float:left;
+  background-color:darkgreen;
+  font-size: large;
+  color: white;
+  border-radius: 0 0 10px 10px;
 }
 
 .player {
@@ -96,7 +127,6 @@ form {
 .net {
   background-color: white;
   line-height: 1.5em;
-  padding:.25em;
   width: 100%;
 }
 
@@ -115,7 +145,7 @@ form {
 }
 
 .button {
-  margin-top: 2em;
+  margin-top: 1em;
   font-size: 2.0em; 
   padding: 0.5em 1em; /* Add padding for a larger clickable area */
   border-radius: 20%;

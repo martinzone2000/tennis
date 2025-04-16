@@ -36,9 +36,9 @@ class CurrentGame extends React.Component {
 
     if (game.InSide === 'North') {
       return (
-        <div>
+        <div className="current-game-container">
           <div className="court">
-            <div className="sideTitle">{game.InSide}</div>
+            <div className="sideTitleTop">{game.InSide}</div>
             <div className="side" onClick={() => this.props.app.winner(cur, true)}>
               <div className={`server player${inWinner}`}>
                 {game.Server.Name} ({game.Server.Score})
@@ -56,7 +56,7 @@ class CurrentGame extends React.Component {
                 {game.Opp2.Name} ({game.Opp2.Score})
               </div>
             </div>
-            <div className="sideTitle">{game.OutSide}</div>
+            <div className="sideTitleBottom">{game.OutSide}</div>
           </div>
           <div className="bench">
             <div className="benchTitle">Sitting Out</div>
@@ -72,9 +72,9 @@ class CurrentGame extends React.Component {
       );
     } else {
       return (
-        <div>
+        <div className="current-game-container">
           <div className="court">
-            <div className="sideTitle">{game.OutSide}</div>
+            <div className="sideTitleTop">{game.OutSide}</div>
             <div className="side" onClick={() => this.setWinner(cur, false)}>
               <div className={`player${outWinner}`}>
                 {game.Opp1.Name} ({game.Opp1.Score})
@@ -92,7 +92,7 @@ class CurrentGame extends React.Component {
                 {game.TeamMate.Name} ({game.TeamMate.Score})
               </div>
             </div>
-            <div className="sideTitle">{game.InSide}</div>
+            <div className="sideTitleBottom">{game.InSide}</div>
           </div>
           <div className="bench">
             <div className="benchTitle">Sitting Out</div>
