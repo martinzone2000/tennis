@@ -10,10 +10,10 @@ class GameListing extends React.Component {
         var opp1 = this.props.game.Opp1.Name;
         var opp2 = this.props.game.Opp2.Name;
         var bench = this.props.game.Bench.Name;
-        var spacer = this.props.index % 5 == 0 ? "spacer row":"row";
-        var wc1 = this.props.game.Winner==1 ? "winner" : "";
-        var wc2 = this.props.game.Winner==2 ? "winner" : "";
-        var status = this.props.game.Winner==0 ? "notPlayed" : "";
+        var spacer = this.props.index % 5 === 0 ? "spacer row":"row";
+        var wc1 = this.props.game.Winner===1 ? "winner" : "";
+        var wc2 = this.props.game.Winner===2 ? "winner" : "";
+        var status = this.props.game.Winner===0 ? "notPlayed" : "";
         var rowclass= spacer+' '+status
         return (
             <tr className={rowclass}>

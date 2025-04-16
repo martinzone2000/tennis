@@ -1,6 +1,6 @@
 import React from 'react'
 import GameListing from './GameListing';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ShowScores from './ShowScores'
 
 class ShowBrackets extends React.Component {
@@ -15,12 +15,12 @@ class ShowBrackets extends React.Component {
                 <table>
                     <thead>
                         <tr>
-                            <td>#</td>
+                            <td>Game</td>
                             <td>Inside</td>
                             <td>Sever</td>
                             <td>In</td>
                             <td>Out 1</td>
-                            <td>Our 2</td>
+                            <td>Out 2</td>
                             <td>Bench</td>
                         </tr>
                     </thead>

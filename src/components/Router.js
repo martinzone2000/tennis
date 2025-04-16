@@ -1,6 +1,5 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from "react-router-dom"
-import App from '../App'
 import CurrentGame from './CurrentGame';
 import ShowBrackets from './ShowBrackets';
 import AddPlayer from './AddPlayer';

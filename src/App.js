@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import AddPlayer from './components/AddPlayer'
-import ListPlayers from './components/ListPlayers'
-import ShowBrackets from './components/ShowBrackets'
-import ShowScores from './components/ShowScores'
-import CurrentGame from './components/CurrentGame'
 import Router from "./components/Router"
+
+const logo = `${process.env.PUBLIC_URL || ''}/assets/RacketsCross.png`; //needed for gh-pages as in index.html
 
 class App extends React.Component {
 
@@ -141,7 +137,7 @@ class App extends React.Component {
 
   autoAdvance = (auto, index) => {
     var cur = this.state.CurrentGame
-    if(index==cur && auto) {
+    if(index===cur && auto) {
       this.nextGame();
     }
   }
@@ -152,6 +148,7 @@ class App extends React.Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to RasNewton</h1>
+          <h2> The '5 player' game scheduler</h2>
         </header>
         <Router app={this} />
       </div>  
