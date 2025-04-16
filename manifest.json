@@ -1,7 +1,7 @@
 {
   "short_name": "Tennis for 5",
   "name": "Doubles tennis + 1 brackets",
-  "scope": "/",
+  "scope": "/tennis/",
   "icons": [
     {
       "src": "assets/favicon_io/favicon.ico",
