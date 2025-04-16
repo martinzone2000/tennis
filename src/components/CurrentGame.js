@@ -38,7 +38,7 @@ class CurrentGame extends React.Component {
                         </div> 
                     <button className="button" disabled={ngd} onClick={() => this.props.app.nextGame()}>NextGame</button>
                     <div className="link">
-                        <Link to="/games/">Game List</Link>
+                        <Link to="/games/">Current Standings</Link>
                     </div>
                 </div>
             )
@@ -65,7 +65,7 @@ class CurrentGame extends React.Component {
                         </div> 
                     <button className="button" disabled={ngd} onClick={() => this.props.app.nextGame()}>NextGame</button>
                     <div className="link">
-                        <Link to="/games/">Game List</Link>
+                        <Link to="/games/">Current Standings</Link>
                     </div>
                 </div>
             )            

@@ -8,7 +8,7 @@ import {BrowserRouter} from "react-router-dom"
 // ReactDOM.render(<App />, document.getElementById('root'));
 // registerServiceWorker();
 ReactDOM.render((
-    <BrowserRouter>
+    <BrowserRouter  basename={process.env.PUBLIC_URL || ''}>
       <App />
     </BrowserRouter>
   ), document.getElementById('root'))

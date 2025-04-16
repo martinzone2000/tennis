@@ -111,15 +111,19 @@ form {
 }
 
 .benchName {
-  font-size: larger
+  font-size: 1.5em; 
 }
 
 .button {
   margin-top: 2em;
+  font-size: 2.0em; 
+  padding: 0.5em 1em; /* Add padding for a larger clickable area */
+  border-radius: 20%;
 }
 
 .link {
   margin-top: 2em;
+  font-size: 2.0em; 
 }
 
 table {
@@ -178,11 +182,11 @@ spaceBelow {
 }
 
 @keyframes App-logo-heartthrob {
-  0% { transform: scale(1); }         /* Normal size */
-  7% { transform: scale(1); }         /* Normal size */
-  20% { transform: scale(1.35); }      /* First pulse */
-  30% { transform: scale(1); }        /* Back to normal */
-  40% { transform: scale(1.2); }      /* Second pulse */
-  60% { transform: scale(1); }        /* Back to normal */
-  100% { transform: scale(1); }       /* Pause at normal size */
+  0% { transform: scale(1.35); }         /* Normal size */
+  7% { transform: scale(1.35); }         /* Normal size */
+  20% { transform: scale(1); }      /* First pulse */
+  30% { transform: scale(1.35); }        /* Back to normal */
+  40% { transform: scale(1.1); }      /* Second pulse */
+  60% { transform: scale(1.35); }        /* Back to normal */
+  100% { transform: scale(1.35); }       /* Pause at normal size */
 }

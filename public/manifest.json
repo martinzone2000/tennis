@@ -1,7 +1,7 @@
 {
   "short_name": "Tennis for 5",
   "name": "Doubles tennis + 1 brackets",
-  "scope": "/",
+  "scope": "/tennis/",
   "icons": [
     {
       "src": "assets/favicon_io/favicon.ico",
@@ -32,7 +32,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "./index.html/?source=pwa&utm_medium=pwa&utm_source=homescreen",
+  "start_url": "/tennis/index.html?source=pwa&utm_medium=pwa&utm_source=homescreen",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
