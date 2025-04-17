@@ -42,7 +42,10 @@
 }
 
 table tr.spacer td {
-  padding-top:2em;
+  padding-top:1em;
+  border: 0;
+  border-top: 1px solid #61d9fa; /* Light gray line */
+  margin: 0; /* Remove default margins */
 }
 
 .score {
@@ -158,6 +161,14 @@ form {
 table {
   width:100%;
   table-layout: fixed;
+}
+
+.flightTable {
+  width: 95%;
+  margin: 1em auto 2em auto;
+  border-radius: 10px; /* Rounded corners */
+  background-color: lightgray;
+  outline: black 1px solid;
 }
 
 .winner {

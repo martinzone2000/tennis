@@ -12,7 +12,7 @@ class ShowBrackets extends React.Component {
             <div className="spaceBelow">
                 <ShowScores players={this.props.app.state.players}/>
                 <Link to="/current/">Current Game</Link>
-                <table>
+                <table className="flightTable">
                     <thead>
                         <tr>
                             <td>Game</td>

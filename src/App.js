@@ -61,9 +61,10 @@ class App extends React.Component {
     return array
   }
 
-  startGame = () => {
+  playerRotation = () => {
+
     var players = [...this.state.players]
-    players = this.shuffle(players) // shuffle the players from the order entered before making the brackets
+    players = this.shuffle(players)
     var i;
     var b = []
     for(i=0 ; i<this.state.players.length;i++) {
@@ -72,15 +73,21 @@ class App extends React.Component {
       players.push(players.shift()); // get the first element and push it to the end of the array
     }
     this.setState({bracket: b});
+    return b
+  }
 
+  startGame = () => {
     var flights = []
 
-    flights = flights.concat(this.getRound(b,[2,3,4],'North', 'South'))
-    flights = flights.concat(this.getRound(b,[2,4,3], 'South', 'North'))
-    flights = flights.concat(this.getRound(b,[3,2,4],'North', 'South'))
-    flights = flights.concat(this.getRound(b,[3,4,2], 'South', 'North'))
-    flights = flights.concat(this.getRound(b,[4,2,3],'North', 'South'))
-    flights = flights.concat(this.getRound(b,[4,3,2], 'South', 'North'))
+    var bracket = this.playerRotation(); //randomize players and create the bracket rotation
+    flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
+    flights = flights.concat(this.getRound(bracket,[2,4,3], 'South', 'North'))
+    //bracket = this.playerRotation()
+    flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
+    flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
+    //bracket = this.playerRotation()
+    flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
+    flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
 
     this.setState({games:flights, CurrentGame:0})
 
