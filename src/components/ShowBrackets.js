@@ -16,11 +16,11 @@ class ShowBrackets extends React.Component {
                     <thead>
                         <tr>
                             <td>Game</td>
-                            <td>Inside</td>
-                            <td>Sever</td>
+                            <td>Facing</td>
+                            <td>Server</td>
                             <td>In</td>
-                            <td>Out 1</td>
-                            <td>Out 2</td>
+                            <td>Opp 1</td>
+                            <td>Opp 2</td>
                             <td>Bench</td>
                         </tr>
                     </thead>
