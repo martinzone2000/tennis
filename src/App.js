@@ -44,14 +44,32 @@ class App extends React.Component {
     return games
   }
 
+  shuffle = (array) => {
+    let currentIndex = array.length;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      let randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array
+  }
+
   startGame = () => {
     var players = [...this.state.players]
+    players = this.shuffle(players) // shuffle the players from the order entered before making the brackets
     var i;
     var b = []
     for(i=0 ; i<this.state.players.length;i++) {
       b.push(players)
       players = [...players]
-      players.push(players.shift())
+      players.push(players.shift()); // get the first element and push it to the end of the array
     }
     this.setState({bracket: b});
 
