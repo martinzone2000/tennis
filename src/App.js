@@ -82,10 +82,10 @@ class App extends React.Component {
     var bracket = this.playerRotation(); //randomize players and create the bracket rotation
     flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[2,4,3], 'South', 'North'))
-    //bracket = this.playerRotation()
+    bracket = this.playerRotation()
     flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
-    //bracket = this.playerRotation()
+    bracket = this.playerRotation()
     flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
 
