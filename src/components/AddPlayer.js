@@ -13,6 +13,7 @@ class AddPlayer extends React.Component {
             { Name: this.nameref.current.value, Score: 0}
         );
         event.currentTarget.reset();
+        this.nameref.current.focus(); // Refocus the input field
     }
 
     componentDidMount(){
@@ -31,6 +32,9 @@ class AddPlayer extends React.Component {
     showDialog = () => {
         if (this.dialogRef.current) {
             this.dialogRef.current.showModal(); // Show the dialog
+            // Remove focus from all elements
+            const activeElement = document.activeElement;
+            if (activeElement) activeElement.blur();
         }
     };
 
