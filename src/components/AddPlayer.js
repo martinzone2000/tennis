@@ -32,9 +32,6 @@ class AddPlayer extends React.Component {
     showDialog = () => {
         if (this.dialogRef.current) {
             this.dialogRef.current.showModal(); // Show the dialog
-            // Remove focus from all elements
-            const activeElement = document.activeElement;
-            if (activeElement) activeElement.blur();
         }
     };
 
@@ -52,6 +49,7 @@ class AddPlayer extends React.Component {
         return(
             <div>
                 <dialog ref={this.dialogRef}>
+                    <div tabIndex="-1"></div> {/* extra hidden focusable element to receive default focus, not buttons */}
                     <h2>Select a game scheduling method</h2>
                     <button className="themeButton" onClick={() => {this.props.app.setFlightType( flightGeneration.SHUFFLED); this.closeDialog()}}>Lancenheimer</button>
                     <button className="themeButton" onClick={() => {this.props.app.setFlightType( flightGeneration.FIXED); this.closeDialog()}}>RasMartin</button>
