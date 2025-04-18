@@ -153,6 +153,23 @@ form {
   border-radius: 20%;
 }
 
+.themeButton {
+  margin-top: 1em;
+  font-size: 2.0em; 
+  padding: 0.5em 1em; /* Add padding for a larger clickable area */
+  border-radius: 15px;
+  background-color: #1f7ffc; /* Light blue background */
+  color: white; /* White text color */
+  margin: 1rem;
+}
+
+dialog {
+  border-radius: 30px; /* Adjust the value for more or less rounding */
+  padding: 1em; /* Optional: Add padding inside the dialog for better spacing */
+  border: 1px solid #ccc; /* Optional: Add a subtle border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow for depth */
+}
+
 .link {
   margin-top: 2em;
   font-size: 2.0em; 

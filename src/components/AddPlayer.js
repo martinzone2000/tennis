@@ -1,9 +1,11 @@
 import React from "react"
 import ListPlayers from "./ListPlayers"
+import {flightGeneration} from "../App"
 
 class AddPlayer extends React.Component {
 
     nameref = React.createRef();
+    dialogRef = React.createRef();
 
     addPlayer = (event) => {
         event.preventDefault();
@@ -26,6 +28,18 @@ class AddPlayer extends React.Component {
         return players.length >= 5
     }
 
+    showDialog = () => {
+        if (this.dialogRef.current) {
+            this.dialogRef.current.showModal(); // Show the dialog
+        }
+    };
+
+    closeDialog = () => {
+        if (this.dialogRef.current) {
+            this.dialogRef.current.close(); // Close the dialog
+            this.startGame(); // Call startGame after the dialog closes
+        }
+    };
 
     render() {
         console.log("add player")
@@ -33,6 +47,11 @@ class AddPlayer extends React.Component {
         var full = this.isFull(this.props.app.state.players)
         return(
             <div>
+                <dialog ref={this.dialogRef}>
+                    <h2>Select a game scheduling method</h2>
+                    <button className="themeButton" onClick={() => {this.props.app.setFlightType( flightGeneration.SHUFFLED); this.closeDialog()}}>Lancenheimer</button>
+                    <button className="themeButton" onClick={() => {this.props.app.setFlightType( flightGeneration.FIXED); this.closeDialog()}}>RasMartin</button>
+                </dialog>
                 <form onSubmit={this.addPlayer} >
                     <input name="name" className="addPlayerInput" ref={this.nameref} 
                     placeholder='Name' type="text"
@@ -40,7 +59,7 @@ class AddPlayer extends React.Component {
                     <button type="submit" disabled={full}>Add</button>
                 </form>
                 <ListPlayers players={this.props.app.state.players} removePlayer={this.props.app.removePlayer}/>
-                {this.props.app.state.players.length>=5 ? <button onClick={this.startGame}>Shall we play a game?</button> : null }
+                {this.props.app.state.players.length>=5 ? <button onClick={this.showDialog}>Shall we play a game?</button> : null }
             </div>
         )
     }

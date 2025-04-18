@@ -4,15 +4,28 @@ import Router from "./components/Router"
 
 const logo = `${process.env.PUBLIC_URL || ''}/assets/RacketsCross.png`; //needed for gh-pages as in index.html
 
+export const flightGeneration = Object.freeze({
+  FIXED: 1,
+  SHUFFLED: 2
+});
+
 class App extends React.Component {
+
 
   state = {
     players: [],
     numPlayers: 0,
     bracket: [],
     games:[],
-    CurrentGame:-1
+    CurrentGame:-1,
   }
+
+  flightTypeRef = React.createRef(flightGeneration.SHUFFLED);
+
+  setFlightType = (type) => {
+    this.flightTypeRef.current = type;
+    console.log("Flight type set to: " + type);
+  };
 
   addPlayer = player => {
     this.setState({players: [...this.state.players, player]});
@@ -48,7 +61,7 @@ class App extends React.Component {
     let currentIndex = array.length;
   
     // While there remain elements to shuffle...
-    while (currentIndex != 0) {
+    while (currentIndex !== 0) {
   
       // Pick a remaining element...
       let randomIndex = Math.floor(Math.random() * currentIndex);
@@ -92,14 +105,17 @@ class App extends React.Component {
     var bracket = this.playerRotation(players); 
     flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[2,4,3], 'South', 'North'))
-    console.log(`players before ripple: ${JSON.stringify(players)}`)
-    players = this.rippleSort(players,1)
-    console.log(`players after ripple: ${JSON.stringify(players)}`)
-    bracket = this.playerRotation(players); 
+    if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
+      console.log("User elected the shuffled games so ripple sort")
+      players = this.rippleSort(players,1) //deterministic sort swapping players starting at 1 to get server serving to last bench guy (even servers)
+      bracket = this.playerRotation(players); 
+    }
     flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
-    players = this.rippleSort(players,2)
-    bracket = this.playerRotation(players); 
+    if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
+      players = this.rippleSort(players,2) //deterministic sort swapping players starting at 0 to get server serving to last bench guy (odd servers)
+      bracket = this.playerRotation(players); 
+    }
     flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
 
