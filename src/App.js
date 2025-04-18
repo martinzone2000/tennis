@@ -61,10 +61,18 @@ class App extends React.Component {
     return array
   }
 
-  playerRotation = () => {
+  rippleSort = (array, modulus) => {
+    let startIndex = modulus %2;
+    for(let i = startIndex; i+1 < array.length; i+=2) {
+        let temp = array[i];
+        array[i] = array[i+1];
+        array[i+1] = temp;
+    }
+    return array
+  }
 
-    var players = [...this.state.players]
-    players = this.shuffle(players)
+  playerRotation = (players) => {
+
     var i;
     var b = []
     for(i=0 ; i<this.state.players.length;i++) {
@@ -79,13 +87,19 @@ class App extends React.Component {
   startGame = () => {
     var flights = []
 
-    var bracket = this.playerRotation(); //randomize players and create the bracket rotation
+    var players = [...this.state.players]
+    players = this.shuffle(players) //randomize players and create the bracket rotation
+    var bracket = this.playerRotation(players); 
     flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[2,4,3], 'South', 'North'))
-    bracket = this.playerRotation()
+    console.log(`players before ripple: ${JSON.stringify(players)}`)
+    players = this.rippleSort(players,1)
+    console.log(`players after ripple: ${JSON.stringify(players)}`)
+    bracket = this.playerRotation(players); 
     flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
-    bracket = this.playerRotation()
+    players = this.rippleSort(players,2)
+    bracket = this.playerRotation(players); 
     flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
     flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
 
