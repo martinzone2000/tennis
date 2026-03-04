@@ -37,6 +37,40 @@ class App extends React.Component {
        players : prevState.players.filter((_,i) => i !== index)
       }));
   }
+  componentDidUpdate(prevProps, prevState) {
+    //  Called immediately after the second and subsequent render()s (every update)
+    localStorage.setItem('tennisAppState', JSON.stringify(this.state));
+    // save current route every update (captures route changes from withRouter)
+    if (this.props.location) {
+      localStorage.setItem('lastRoute', this.props.location.pathname);
+    }
+  }
+  componentDidMount() {
+    /*
+    Called once, immediately after the component is mounted (inserted into the DOM),
+    after the first render()
+    Perfect for: Initializing things that need DOM access, fetching data, subscribing to events, setting up timers, or loading from localStorage
+    */
+    const savedState = localStorage.getItem('tennisAppState');
+    const lastRoute = localStorage.getItem('lastRoute') || '/';
+    
+    console.log('componentDidMount - savedState exists:', !!savedState);
+    console.log('componentDidMount - lastRoute:', lastRoute);
+ 
+    if (savedState) {
+      if (window.confirm('Continue last game? Click Cancel to start a new game.')) {
+        const parsed = JSON.parse(savedState);
+        this.setState(parsed, () => {
+          if (lastRoute && lastRoute !== '/') {
+            this.props.history.push(lastRoute);
+          }
+        });
+      } else {
+        localStorage.removeItem('tennisAppState');
+        localStorage.removeItem('lastRoute');
+      }
+    }
+  }
 
   getRoundOrig = (matrix, shiftAry, inside, outside) => {
     var i;
@@ -116,6 +150,8 @@ class App extends React.Component {
   }
 
   startGame = () => {
+    localStorage.removeItem('tennisAppState'); // Clear previous state
+
     var flights = []
 
     var players = [...this.state.players]  // a 5 man array
@@ -129,7 +165,7 @@ class App extends React.Component {
       bracket = this.playerRotation(players); 
       flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[3,2,4], 'South', 'North')) //swap next round here to even opponents over 20 games in case we quit early
-} else {
+    } else {
       flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
     }
@@ -145,6 +181,18 @@ class App extends React.Component {
 
 
     console.log(flights);
+  }
+
+  resetGame = () => {
+    localStorage.removeItem('tennisAppState');
+    localStorage.removeItem('lastRoute');
+    this.setState({
+      players: [],
+      numPlayers: 0,
+      bracket: [],
+      games: [],
+      CurrentGame: -1
+    });
   }
 
   winner = (index, inservice, autoadvance) => {

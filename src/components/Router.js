@@ -6,8 +6,9 @@ import AddPlayer from './AddPlayer';
 
 class Router extends React.Component {
   render() {
-    console.log('router');
-    console.log(this.props);
+    // Router simply renders the appropriate component based on path.
+    // state restoration and navigation are handled in App.
+
     return (
       <Switch>
         <Route exact path="/index.html">
