@@ -199,6 +199,7 @@ class App extends React.Component {
     console.log("winner is "+ index+ "  " + inservice)
     var g = [...this.state.games]
     var game = g[index]
+    var players = [...this.state.players] // also create a copy of players array
     console.log(this.state.CurrentGame)
     console.log(game)
 
@@ -209,20 +210,28 @@ class App extends React.Component {
     if(game.Winner === 1 && inservice) {
       //reset the game to no winner
       game.Winner = 0
-      game.Server.Score=game.Server.Score-1
-      game.TeamMate.Score=game.TeamMate.Score-1
-      //this.autoAdvance(autoadvance, index)
-      this.setState({games:g})
+      game.Server = { ...game.Server, Score: game.Server.Score - 1 }
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score - 1 }
+      // also update in players array
+      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
+      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
+      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score - 1 }
+      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score - 1 }
+      this.setState({games:g, players:players})
       return
      }
 
     if(game.Winner === 2 && !inservice) {
       //reset the game to no winner
       game.Winner = 0
-      game.Opp1.Score=game.Opp1.Score-1
-      game.Opp2.Score=game.Opp2.Score-1
-      //this.autoAdvance(autoadvance, index)
-      this.setState({games:g})
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score - 1 }
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score - 1 }
+      // also update in players array
+      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
+      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
+      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score - 1 }
+      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score - 1 }
+      this.setState({games:g, players:players})
       return
      }
 
@@ -235,20 +244,38 @@ class App extends React.Component {
 
     if(inservice) {
       game.Winner = 1
-      game.Server.Score=game.Server.Score+1
-      game.TeamMate.Score=game.TeamMate.Score+1
-      game.Opp1.Score=game.Opp1.Score+adj
-      game.Opp2.Score=game.Opp2.Score+adj   
+      game.Server = { ...game.Server, Score: game.Server.Score + 1 }
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + 1 }
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + adj }
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + adj }
+      // also update in players array
+      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
+      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
+      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
+      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
+      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score + 1 }
+      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score + 1 }
+      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score + adj }
+      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score + adj }
     }
     else {
       game.Winner = 2
-      game.Server.Score=game.Server.Score+adj
-      game.TeamMate.Score=game.TeamMate.Score+adj
-      game.Opp1.Score=game.Opp1.Score+1
-      game.Opp2.Score=game.Opp2.Score+1    
+      game.Server = { ...game.Server, Score: game.Server.Score + adj }
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + adj }
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + 1 }
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + 1 }
+      // also update in players array
+      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
+      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
+      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
+      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
+      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score + adj }
+      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score + adj }
+      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score + 1 }
+      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score + 1 }
     }
     this.autoAdvance(autoadvance, index)
-    this.setState({games:g})
+    this.setState({games:g, players:players})
   }
 
   nextGame = () => {
