@@ -61,9 +61,41 @@ class App extends React.Component {
       if (window.confirm('Continue last game? Click Cancel to start a new game.')) {
         const parsed = JSON.parse(savedState);
         this.setState(parsed, () => {
-          if (lastRoute && lastRoute !== '/') {
-            this.props.history.push(lastRoute);
-          }
+          // ensure player total scores agree with game data
+          const recalculated = this.state.players.map(p => ({ ...p, Score: 0 }));
+          this.state.games.forEach(game => {
+            if (game.Winner === 1) {
+              const s = recalculated.find(x => x.Name === game.Server.Name);
+              const t = recalculated.find(x => x.Name === game.TeamMate.Name);
+              if (s) s.Score++;
+              if (t) t.Score++;
+            } else if (game.Winner === 2) {
+              const o1 = recalculated.find(x => x.Name === game.Opp1.Name);
+              const o2 = recalculated.find(x => x.Name === game.Opp2.Name);
+              if (o1) o1.Score++;
+              if (o2) o2.Score++;
+            }
+          });
+          // update both players and game participant scores
+          const updatedGames = parsed.games.map(game => {
+            const findScore = name => {
+              const p = recalculated.find(p => p.Name === name);
+              return p ? p.Score : 0;
+            };
+            return {
+              ...game,
+              Server: { ...game.Server, Score: findScore(game.Server.Name) },
+              TeamMate: { ...game.TeamMate, Score: findScore(game.TeamMate.Name) },
+              Opp1: { ...game.Opp1, Score: findScore(game.Opp1.Name) },
+              Opp2: { ...game.Opp2, Score: findScore(game.Opp2.Name) }
+            };
+          });
+          this.setState({ players: recalculated, games: updatedGames }, () => {
+            console.log('state after restore:', this.state);
+            if (lastRoute && lastRoute !== '/') {
+              this.props.history.push(lastRoute);
+            }
+          });
         });
       } else {
         localStorage.removeItem('tennisAppState');
@@ -196,86 +228,74 @@ class App extends React.Component {
   }
 
   winner = (index, inservice, autoadvance) => {
-    console.log("winner is "+ index+ "  " + inservice)
-    var g = [...this.state.games]
-    var game = g[index]
-    var players = [...this.state.players] // also create a copy of players array
-    console.log(this.state.CurrentGame)
-    console.log(game)
+    console.log("winner is " + index + "  " + inservice);
+    let games = [...this.state.games];
+    let players = [...this.state.players];
+    let game = games[index];
+    if (index > this.state.CurrentGame) return;
 
-    if(index > this.state.CurrentGame) return;
-
-    var adj=0
-
-    if(game.Winner === 1 && inservice) {
-      //reset the game to no winner
-      game.Winner = 0
-      game.Server = { ...game.Server, Score: game.Server.Score - 1 }
-      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score - 1 }
-      // also update in players array
-      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
-      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
-      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score - 1 }
-      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score - 1 }
-      this.setState({games:g, players:players})
-      return
-     }
-
-    if(game.Winner === 2 && !inservice) {
-      //reset the game to no winner
-      game.Winner = 0
-      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score - 1 }
-      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score - 1 }
-      // also update in players array
-      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
-      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
-      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score - 1 }
-      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score - 1 }
-      this.setState({games:g, players:players})
-      return
-     }
-
-
-    if(game.Winner !== 0) {
-      //changing the score
-      adj=-1;
+    let adj = 0;
+    // undo previous winner if clicking same side again
+    if (game.Winner === 1 && inservice) {
+      game.Winner = 0;
+      game.Server = { ...game.Server, Score: game.Server.Score - 1 };
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score - 1 };
+      const si = players.findIndex(p => p.Name === game.Server.Name);
+      const ti = players.findIndex(p => p.Name === game.TeamMate.Name);
+      if (si >= 0) players[si] = { ...players[si], Score: players[si].Score - 1 };
+      if (ti >= 0) players[ti] = { ...players[ti], Score: players[ti].Score - 1 };
+      this.setState({ games, players });
+      return;
+    }
+    if (game.Winner === 2 && !inservice) {
+      game.Winner = 0;
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score - 1 };
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score - 1 };
+      const o1i = players.findIndex(p => p.Name === game.Opp1.Name);
+      const o2i = players.findIndex(p => p.Name === game.Opp2.Name);
+      if (o1i >= 0) players[o1i] = { ...players[o1i], Score: players[o1i].Score - 1 };
+      if (o2i >= 0) players[o2i] = { ...players[o2i], Score: players[o2i].Score - 1 };
+      this.setState({ games, players });
+      return;
     }
 
+    if (game.Winner !== 0) adj = -1;
 
-    if(inservice) {
-      game.Winner = 1
-      game.Server = { ...game.Server, Score: game.Server.Score + 1 }
-      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + 1 }
-      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + adj }
-      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + adj }
-      // also update in players array
-      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
-      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
-      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
-      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
-      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score + 1 }
-      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score + 1 }
-      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score + adj }
-      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score + adj }
+    if (inservice) {
+      game.Winner = 1;
+      game.Server = { ...game.Server, Score: game.Server.Score + 1 };
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + 1 };
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + adj };
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + adj };
+
+      const si = players.findIndex(p => p.Name === game.Server.Name);
+      const ti = players.findIndex(p => p.Name === game.TeamMate.Name);
+      const o1i = players.findIndex(p => p.Name === game.Opp1.Name);
+      const o2i = players.findIndex(p => p.Name === game.Opp2.Name);
+      if (si >= 0) players[si] = { ...players[si], Score: players[si].Score + 1 };
+      if (ti >= 0) players[ti] = { ...players[ti], Score: players[ti].Score + 1 };
+      if (o1i >= 0) players[o1i] = { ...players[o1i], Score: players[o1i].Score + adj };
+      if (o2i >= 0) players[o2i] = { ...players[o2i], Score: players[o2i].Score + adj };
+    } else {
+      game.Winner = 2;
+      game.Server = { ...game.Server, Score: game.Server.Score + adj };
+      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + adj };
+      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + 1 };
+      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + 1 };
+
+      const si = players.findIndex(p => p.Name === game.Server.Name);
+      const ti = players.findIndex(p => p.Name === game.TeamMate.Name);
+      const o1i = players.findIndex(p => p.Name === game.Opp1.Name);
+      const o2i = players.findIndex(p => p.Name === game.Opp2.Name);
+      if (si >= 0) players[si] = { ...players[si], Score: players[si].Score + adj };
+      if (ti >= 0) players[ti] = { ...players[ti], Score: players[ti].Score + adj };
+      if (o1i >= 0) players[o1i] = { ...players[o1i], Score: players[o1i].Score + 1 };
+      if (o2i >= 0) players[o2i] = { ...players[o2i], Score: players[o2i].Score + 1 };
     }
-    else {
-      game.Winner = 2
-      game.Server = { ...game.Server, Score: game.Server.Score + adj }
-      game.TeamMate = { ...game.TeamMate, Score: game.TeamMate.Score + adj }
-      game.Opp1 = { ...game.Opp1, Score: game.Opp1.Score + 1 }
-      game.Opp2 = { ...game.Opp2, Score: game.Opp2.Score + 1 }
-      // also update in players array
-      const serverIdx = players.findIndex(p => p.Name === game.Server.Name)
-      const tmIdx = players.findIndex(p => p.Name === game.TeamMate.Name)
-      const opp1Idx = players.findIndex(p => p.Name === game.Opp1.Name)
-      const opp2Idx = players.findIndex(p => p.Name === game.Opp2.Name)
-      if(serverIdx >= 0) players[serverIdx] = { ...players[serverIdx], Score: players[serverIdx].Score + adj }
-      if(tmIdx >= 0) players[tmIdx] = { ...players[tmIdx], Score: players[tmIdx].Score + adj }
-      if(opp1Idx >= 0) players[opp1Idx] = { ...players[opp1Idx], Score: players[opp1Idx].Score + 1 }
-      if(opp2Idx >= 0) players[opp2Idx] = { ...players[opp2Idx], Score: players[opp2Idx].Score + 1 }
+    if (autoadvance) {
+      this.autoAdvance(autoadvance, index);
     }
-    this.autoAdvance(autoadvance, index)
-    this.setState({games:g, players:players})
+    this.setState({ games, players });
   }
 
   nextGame = () => {
