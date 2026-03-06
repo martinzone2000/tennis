@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Router from "./components/Router"
+import lzString from 'lz-string';
 
 const logo = `${process.env.PUBLIC_URL || ''}/assets/RacketsCross.png`; //needed for gh-pages as in index.html
 
@@ -51,6 +52,48 @@ class App extends React.Component {
     after the first render()
     Perfect for: Initializing things that need DOM access, fetching data, subscribing to events, setting up timers, or loading from localStorage
     */
+    // Check for shared state in URL query params first
+    const urlParams = new URLSearchParams(this.props.location.search);
+    const sharedState = urlParams.get('state');
+    if (sharedState) {
+      const parsed = this.deserializeState(sharedState);
+      if (parsed && window.confirm('Load shared game? This will replace any current game.')) {
+        this.setState(parsed, () => {
+          // Recalculate scores as in localStorage restore
+          const recalculated = this.state.players.map(p => ({ ...p, Score: 0 }));
+          this.state.games.forEach(game => {
+            if (game.Winner === 1) {
+              const s = recalculated.find(x => x.Name === game.Server.Name);
+              const t = recalculated.find(x => x.Name === game.TeamMate.Name);
+              if (s) s.Score++;
+              if (t) t.Score++;
+            } else if (game.Winner === 2) {
+              const o1 = recalculated.find(x => x.Name === game.Opp1.Name);
+              const o2 = recalculated.find(x => x.Name === game.Opp2.Name);
+              if (o1) o1.Score++;
+              if (o2) o2.Score++;
+            }
+          });
+          const updatedGames = parsed.games.map(game => {
+            const findScore = name => {
+              const p = recalculated.find(p => p.Name === name);
+              return p ? p.Score : 0;
+            };
+            return {
+              ...game,
+              Server: { ...game.Server, Score: findScore(game.Server.Name) },
+              TeamMate: { ...game.TeamMate, Score: findScore(game.TeamMate.Name) },
+              Opp1: { ...game.Opp1, Score: findScore(game.Opp1.Name) },
+              Opp2: { ...game.Opp2, Score: findScore(game.Opp2.Name) }
+            };
+          });
+          this.setState({ players: recalculated, games: updatedGames });
+        });
+        return; // Skip localStorage check if loaded from URL
+      }
+    }
+
+    // If no shared state or declined, check localStorage
     const savedState = localStorage.getItem('tennisAppState');
     const lastRoute = localStorage.getItem('lastRoute') || '/';
     
@@ -225,6 +268,93 @@ class App extends React.Component {
       games: [],
       CurrentGame: -1
     });
+  }
+
+  serializeState = () => {
+    const stateToShare = {
+      players: this.state.players,
+      games: this.state.games,
+      CurrentGame: this.state.CurrentGame,
+      bracket: this.state.bracket
+    };
+    const json = JSON.stringify(stateToShare);
+    return lzString.compressToEncodedURIComponent(json);
+  }
+
+  deserializeState = (compressed) => {
+    try {
+      const json = lzString.decompressFromEncodedURIComponent(compressed);
+      return JSON.parse(json);
+    } catch (e) {
+      console.error('Failed to deserialize state:', e);
+      return null;
+    }
+  }
+
+  shareGame = () => {
+    const compressed = this.serializeState();
+    const url = window.location.origin + window.location.pathname + '?state=' + compressed;
+    
+    // Create a custom dialog for copying
+    const dialog = document.createElement('div');
+    dialog.style.position = 'fixed';
+    dialog.style.top = '50%';
+    dialog.style.left = '50%';
+    dialog.style.transform = 'translate(-50%, -50%)';
+    dialog.style.background = 'white';
+    dialog.style.padding = '20px';
+    dialog.style.border = '1px solid #ccc';
+    dialog.style.borderRadius = '5px';
+    dialog.style.zIndex = '1000';
+    dialog.style.maxWidth = '90%';
+    dialog.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+    
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.style.width = '100%';
+    textarea.style.height = '100px';
+    textarea.style.marginBottom = '10px';
+    textarea.select(); // Auto-select for easy copying
+    
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'Copy to Clipboard';
+    copyButton.style.padding = '10px 20px';
+    copyButton.style.background = '#4CAF50';
+    copyButton.style.color = 'white';
+    copyButton.style.border = 'none';
+    copyButton.style.borderRadius = '3px';
+    copyButton.style.cursor = 'pointer';
+    copyButton.onclick = () => {
+      textarea.select();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          alert('Copied!');
+          document.body.removeChild(dialog);
+        });
+      } else {
+        document.execCommand('copy');
+        alert('Copied!');
+        document.body.removeChild(dialog);
+      }
+    };
+    
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.style.padding = '10px 20px';
+    closeButton.style.background = '#ccc';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '3px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.marginLeft = '10px';
+    closeButton.onclick = () => document.body.removeChild(dialog);
+    
+    dialog.appendChild(document.createTextNode('Share this link:'));
+    dialog.appendChild(document.createElement('br'));
+    dialog.appendChild(textarea);
+    dialog.appendChild(copyButton);
+    dialog.appendChild(closeButton);
+    
+    document.body.appendChild(dialog);
   }
 
   winner = (index, inservice, autoadvance) => {
