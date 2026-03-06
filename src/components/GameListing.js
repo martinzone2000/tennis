@@ -3,7 +3,7 @@ import '../App.css';
 
 class GameListing extends React.Component {
     render() {
-        console.log("gamelisting")
+        //console.log("gamelisting")
         console.log(this.props)
         var server = this.props.game.Server.Name;
         var teammate = this.props.game.TeamMate.Name;

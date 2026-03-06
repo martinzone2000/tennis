@@ -55,8 +55,12 @@ class App extends React.Component {
     // Check for shared state in URL query params first
     const urlParams = new URLSearchParams(this.props.location.search);
     const sharedState = urlParams.get('state');
+    console.log('componentDidMount - location.search:', this.props.location.search);
+    console.log('componentDidMount - sharedState exists:', !!sharedState);
     if (sharedState) {
+      console.log('componentDidMount - sharedState length:', sharedState.length);
       const parsed = this.deserializeState(sharedState);
+      console.log('componentDidMount - parsed state:', parsed);
       if (parsed && window.confirm('Load shared game? This will replace any current game.')) {
         this.setState(parsed, () => {
           // Recalculate scores as in localStorage restore
