@@ -295,7 +295,35 @@ class App extends React.Component {
     const compressed = this.serializeState();
     const url = window.location.origin + window.location.pathname + '?state=' + compressed;
     
-    // Create a custom dialog for copying
+    // Try Web Share API first (great for mobile)
+    if (navigator.share) {
+      navigator.share({
+        title: 'Tennis Game',
+        text: 'Check out this tennis game!',
+        url: url
+      }).catch(() => {
+        // If share fails, fall back to clipboard or manual copy
+        this.fallbackCopy(url);
+      });
+    } else {
+      this.fallbackCopy(url);
+    }
+  }
+
+  fallbackCopy = (url) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Game link copied to clipboard!');
+      }).catch(() => {
+        this.manualCopy(url);
+      });
+    } else {
+      this.manualCopy(url);
+    }
+  }
+
+  manualCopy = (url) => {
+    // Create a simple dialog for manual copying
     const dialog = document.createElement('div');
     dialog.style.position = 'fixed';
     dialog.style.top = '50%';
@@ -309,34 +337,18 @@ class App extends React.Component {
     dialog.style.maxWidth = '90%';
     dialog.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
     
+    const text = document.createElement('div');
+    text.textContent = 'Copy this link to share the game:';
+    text.style.marginBottom = '10px';
+    
     const textarea = document.createElement('textarea');
     textarea.value = url;
     textarea.style.width = '100%';
-    textarea.style.height = '100px';
+    textarea.style.height = '80px';
     textarea.style.marginBottom = '10px';
-    textarea.select(); // Auto-select for easy copying
-    
-    const copyButton = document.createElement('button');
-    copyButton.textContent = 'Copy to Clipboard';
-    copyButton.style.padding = '10px 20px';
-    copyButton.style.background = '#4CAF50';
-    copyButton.style.color = 'white';
-    copyButton.style.border = 'none';
-    copyButton.style.borderRadius = '3px';
-    copyButton.style.cursor = 'pointer';
-    copyButton.onclick = () => {
-      textarea.select();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(() => {
-          alert('Copied!');
-          document.body.removeChild(dialog);
-        });
-      } else {
-        document.execCommand('copy');
-        alert('Copied!');
-        document.body.removeChild(dialog);
-      }
-    };
+    textarea.readOnly = true;
+    textarea.style.resize = 'none';
+    textarea.onclick = () => textarea.select(); // Auto-select on click
     
     const closeButton = document.createElement('button');
     closeButton.textContent = 'Close';
@@ -345,13 +357,10 @@ class App extends React.Component {
     closeButton.style.border = 'none';
     closeButton.style.borderRadius = '3px';
     closeButton.style.cursor = 'pointer';
-    closeButton.style.marginLeft = '10px';
     closeButton.onclick = () => document.body.removeChild(dialog);
     
-    dialog.appendChild(document.createTextNode('Share this link:'));
-    dialog.appendChild(document.createElement('br'));
+    dialog.appendChild(text);
     dialog.appendChild(textarea);
-    dialog.appendChild(copyButton);
     dialog.appendChild(closeButton);
     
     document.body.appendChild(dialog);
