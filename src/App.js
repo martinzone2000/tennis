@@ -275,11 +275,30 @@ class App extends React.Component {
   }
 
   serializeState = () => {
+    // Create a compact version: use player indices instead of full objects
+    const playerMap = {};
+    this.state.players.forEach((p, i) => playerMap[p.Name] = i);
+    
+    const compactGames = this.state.games.map(game => ({
+      s: playerMap[game.Server.Name], // server index
+      ss: game.Server.Score,
+      t: playerMap[game.TeamMate.Name], // teamMate index
+      ts: game.TeamMate.Score,
+      o1: playerMap[game.Opp1.Name], // opp1 index
+      o1s: game.Opp1.Score,
+      o2: playerMap[game.Opp2.Name], // opp2 index
+      o2s: game.Opp2.Score,
+      b: playerMap[game.Bench.Name], // bench index
+      w: game.Winner,
+      i: game.InSide,
+      o: game.OutSide
+    }));
+    
     const stateToShare = {
       players: this.state.players,
-      games: this.state.games,
+      games: compactGames,
       CurrentGame: this.state.CurrentGame,
-      bracket: this.state.bracket
+      bracket: this.state.bracket // can compact this too if needed
     };
     const json = JSON.stringify(stateToShare);
     return lzString.compressToEncodedURIComponent(json);
@@ -288,7 +307,23 @@ class App extends React.Component {
   deserializeState = (compressed) => {
     try {
       const json = lzString.decompressFromEncodedURIComponent(compressed);
-      return JSON.parse(json);
+      const parsed = JSON.parse(json);
+      
+      // Reconstruct full game objects from compact format
+      if (parsed.games && Array.isArray(parsed.games)) {
+        parsed.games = parsed.games.map(game => ({
+          Server: { Name: parsed.players[game.s].Name, Score: game.ss },
+          TeamMate: { Name: parsed.players[game.t].Name, Score: game.ts },
+          Opp1: { Name: parsed.players[game.o1].Name, Score: game.o1s },
+          Opp2: { Name: parsed.players[game.o2].Name, Score: game.o2s },
+          Bench: { Name: parsed.players[game.b].Name },
+          Winner: game.w,
+          InSide: game.i,
+          OutSide: game.o
+        }));
+      }
+      
+      return parsed;
     } catch (e) {
       console.error('Failed to deserialize state:', e);
       return null;
