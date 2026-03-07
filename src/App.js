@@ -91,7 +91,10 @@ class App extends React.Component {
               Opp2: { ...game.Opp2, Score: findScore(game.Opp2.Name) }
             };
           });
-          this.setState({ players: recalculated, games: updatedGames });
+          this.setState({ players: recalculated, games: updatedGames }, () => {
+            // Navigate to games page to display the shared games
+            this.props.history.push('/games');
+          });
         });
         return; // Skip localStorage check if loaded from URL
       }
@@ -275,7 +278,10 @@ class App extends React.Component {
   }
 
   serializeState = () => {
-    // Create a compact version: use player indices instead of full objects
+    // Create a compact version to keep < query string limits 
+    // std http limits are 2048 so keeping short works on all platforms without needing a backend.
+    // My test reduced 3500 to 1500 chars for state object
+    // : use player indices instead of full objects
     const playerMap = {};
     this.state.players.forEach((p, i) => playerMap[p.Name] = i);
     
@@ -311,16 +317,20 @@ class App extends React.Component {
       
       // Reconstruct full game objects from compact format
       if (parsed.games && Array.isArray(parsed.games)) {
-        parsed.games = parsed.games.map(game => ({
-          Server: { Name: parsed.players[game.s].Name, Score: game.ss },
-          TeamMate: { Name: parsed.players[game.t].Name, Score: game.ts },
-          Opp1: { Name: parsed.players[game.o1].Name, Score: game.o1s },
-          Opp2: { Name: parsed.players[game.o2].Name, Score: game.o2s },
-          Bench: { Name: parsed.players[game.b].Name },
-          Winner: game.w,
-          InSide: game.i,
-          OutSide: game.o
-        }));
+        parsed.games = parsed.games.map(game => {
+          const getPlayer = (index) => parsed.players[index] ? parsed.players[index] : { Name: 'Unknown' };
+          
+          return {
+            Server: { Name: getPlayer(game.s).Name, Score: game.ss || 0 },
+            TeamMate: { Name: getPlayer(game.t).Name, Score: game.ts || 0 },
+            Opp1: { Name: getPlayer(game.o1).Name, Score: game.o1s || 0 },
+            Opp2: { Name: getPlayer(game.o2).Name, Score: game.o2s || 0 },
+            Bench: { Name: getPlayer(game.b).Name },
+            Winner: game.w || 0,
+            InSide: game.i || false,
+            OutSide: game.o || false
+          };
+        });
       }
       
       return parsed;
@@ -332,7 +342,9 @@ class App extends React.Component {
 
   shareGame = () => {
     const compressed = this.serializeState();
-    const url = window.location.origin + window.location.pathname + '?state=' + compressed;
+    // Always use the app root path, not the current page path
+    const appRoot = window.location.href.split('?')[0].replace(/\/[^\/]*\/?$/, '/');
+    const url = appRoot + '?state=' + compressed;
     
     // Try Web Share API first (great for mobile)
     if (navigator.share) {
