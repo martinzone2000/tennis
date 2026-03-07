@@ -1,3 +1,12 @@
+# Getting Started
+VSCode markdown viewer: install Markdown Preview Enhanced extension, then ctrl-shift-v
+
+## Short Cut in Production
+Once the project is setup using the guides below a new update simply needs to be compiled locally, then pushed to github pages with
+### `npm run build`
+### `npm run deploy`
+Note: the deploy script is modified once for each developer using their credentials. See the package.json
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

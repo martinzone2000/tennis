@@ -1,6 +1,5 @@
 import React from 'react'
 import GameListing from './GameListing';
-import { Link } from "react-router-dom";
 import ShowScores from './ShowScores'
 
 class ShowBrackets extends React.Component {
