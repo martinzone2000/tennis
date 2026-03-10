@@ -343,14 +343,15 @@ class App extends React.Component {
   shareGame = () => {
     const compressed = this.serializeState();
     // Always use the app root path, not the current page path
-    const appRoot = window.location.href.split('?')[0].replace(/\/[^\/]*\/?$/, '/');
+    //const appRoot = window.location.href.split('?')[0].replace(/\/[^\/]*\/?$/, '/');
+    const appRoot = window.location.href.split('?')[0].replace(new RegExp('/[^/]*/?$'), '/');
     const url = appRoot + '?state=' + compressed;
     
     // Try Web Share API first (great for mobile)
     if (navigator.share) {
       navigator.share({
-        title: 'Tennis Game',
-        text: 'Check out this tennis game!',
+        // title: 'Tennis Game', //remove so messaging apps will inspect the url only and not try to build a "readable" msg
+        // text: 'Check out this tennis game!',
         url: url
       }).catch(() => {
         // If share fails, fall back to clipboard or manual copy
