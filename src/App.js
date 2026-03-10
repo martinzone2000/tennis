@@ -38,14 +38,26 @@ class App extends React.Component {
        players : prevState.players.filter((_,i) => i !== index)
       }));
   }
+  saveTimer = null;
+
   componentDidUpdate(prevProps, prevState) {
-    //  Called immediately after the second and subsequent render()s (every update)
-    localStorage.setItem('tennisAppState', JSON.stringify(this.state));
-    // save current route every update (captures route changes from withRouter)
-    if (this.props.location) {
-      localStorage.setItem('lastRoute', this.props.location.pathname);
-    }
+    // Clear the previous timer if an update happens within 400ms
+    if (this.saveTimer) clearTimeout(this.saveTimer);
+    
+    // Set a new timer to write everything at once
+    this.saveTimer = setTimeout(() => {
+      localStorage.setItem('tennisAppState', JSON.stringify(this.state));
+      if (this.props.location) {
+        localStorage.setItem('lastRoute', this.props.location.pathname);
+      }
+    }, 400);
   }
+
+  componentWillUnmount() {
+    // Cleanup to prevent memory leaks if the component unmounts
+    if (this.saveTimer) clearTimeout(this.saveTimer);
+  }
+  
   componentDidMount() {
     /*
     Called once, immediately after the component is mounted (inserted into the DOM),
@@ -240,7 +252,7 @@ class App extends React.Component {
     players = this.shuffle(players) //randomize players and create the bracket rotation
     var bracket = this.playerRotation(players); // 5 arrays of 5 players each
     flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
-    flights = flights.concat(this.getRound(bracket,[2,3,4], 'South', 'North')) //was 2,4,3,
+    flights = flights.concat(this.getRound(bracket,[2,3,4], 'South', 'North')) 
     if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
       console.log("User elected the shuffled games so ripple sort")
       players = this.rippleSort(players,2) //deterministic sort swapping players starting at 1 to get server serving to last bench guy (even servers)
@@ -252,8 +264,8 @@ class App extends React.Component {
       flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
     }
     if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
-      flights = flights.concat(this.getRound(bracket,[3,4,2],'North', 'South')) //was 432
-      flights = flights.concat(this.getRound(bracket,[4,2,3], 'South', 'North')) //was342
+      flights = flights.concat(this.getRound(bracket,[3,4,2],'North', 'South')) 
+      flights = flights.concat(this.getRound(bracket,[4,2,3], 'South', 'North')) 
     } else {
       flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
@@ -313,25 +325,36 @@ class App extends React.Component {
   deserializeState = (compressed) => {
     try {
       const json = lzString.decompressFromEncodedURIComponent(compressed);
+      if (!json) return null; // Guard against empty decompression
+      
       const parsed = JSON.parse(json);
       
+      // Validate core skeleton to prevent crashes
+      if (!parsed || typeof parsed !== 'object') return null;
+      if (!Array.isArray(parsed.players) || !Array.isArray(parsed.games)) return null;
+
+      // Ensure CurrentGame is a valid number
+      parsed.CurrentGame = typeof parsed.CurrentGame === 'number' ? parsed.CurrentGame : -1;
+      
       // Reconstruct full game objects from compact format
-      if (parsed.games && Array.isArray(parsed.games)) {
-        parsed.games = parsed.games.map(game => {
-          const getPlayer = (index) => parsed.players[index] ? parsed.players[index] : { Name: 'Unknown' };
-          
-          return {
-            Server: { Name: getPlayer(game.s).Name, Score: game.ss || 0 },
-            TeamMate: { Name: getPlayer(game.t).Name, Score: game.ts || 0 },
-            Opp1: { Name: getPlayer(game.o1).Name, Score: game.o1s || 0 },
-            Opp2: { Name: getPlayer(game.o2).Name, Score: game.o2s || 0 },
-            Bench: { Name: getPlayer(game.b).Name },
-            Winner: game.w || 0,
-            InSide: game.i || false,
-            OutSide: game.o || false
-          };
-        });
-      }
+      parsed.games = parsed.games.map(game => {
+        // Safe getter that prevents "Cannot read property of undefined"
+        const getPlayer = (index) => {
+          const player = parsed.players[index];
+          return player && player.Name ? player : { Name: 'Unknown' };
+        };
+        
+        return {
+          Server: { Name: getPlayer(game.s).Name, Score: game.ss || 0 },
+          TeamMate: { Name: getPlayer(game.t).Name, Score: game.ts || 0 },
+          Opp1: { Name: getPlayer(game.o1).Name, Score: game.o1s || 0 },
+          Opp2: { Name: getPlayer(game.o2).Name, Score: game.o2s || 0 },
+          Bench: { Name: getPlayer(game.b).Name },
+          Winner: game.w || 0,
+          InSide: game.i || false,
+          OutSide: game.o || false
+        };
+      });
       
       return parsed;
     } catch (e) {
