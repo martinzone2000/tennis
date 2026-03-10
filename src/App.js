@@ -240,20 +240,20 @@ class App extends React.Component {
     players = this.shuffle(players) //randomize players and create the bracket rotation
     var bracket = this.playerRotation(players); // 5 arrays of 5 players each
     flights = flights.concat(this.getRound(bracket,[2,3,4],'North', 'South'))
-    flights = flights.concat(this.getRound(bracket,[2,4,3], 'South', 'North'))
+    flights = flights.concat(this.getRound(bracket,[2,3,4], 'South', 'North')) //was 2,4,3,
     if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
       console.log("User elected the shuffled games so ripple sort")
       players = this.rippleSort(players,2) //deterministic sort swapping players starting at 1 to get server serving to last bench guy (even servers)
       bracket = this.playerRotation(players); 
       flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
-      flights = flights.concat(this.getRound(bracket,[3,2,4], 'South', 'North')) //swap next round here to even opponents over 20 games in case we quit early
+      flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North')) //was 324. swap next round here to even opponents over 20 games in case we quit early
     } else {
       flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
     }
     if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
-      flights = flights.concat(this.getRound(bracket,[4,3,2],'North', 'South'))
-      flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
+      flights = flights.concat(this.getRound(bracket,[3,4,2],'North', 'South')) //was 432
+      flights = flights.concat(this.getRound(bracket,[4,2,3], 'South', 'North')) //was342
     } else {
       flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))

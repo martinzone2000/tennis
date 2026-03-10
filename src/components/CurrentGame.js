@@ -39,21 +39,21 @@ class CurrentGame extends React.Component {
         <div className="current-game-container">
           <div className="court">
             <div className="sideTitleTop">{game.InSide}</div>
-            <div className="side" onClick={() => this.props.app.winner(cur, true)}>
+            <div className="side" onClick={() => this.setWinner(cur, true)}>
               <div className={`server player${inWinner}`}>
-                {game.Server.Name} ({game.Server.Score})
+                {game.Server.Name} ({this.props.app.state.players.find(p => p.Name === game.Server.Name).Score})
               </div>
               <div className={`player${inWinner}`}>
-                {game.TeamMate.Name} ({game.TeamMate.Score})
+                {game.TeamMate.Name} ({this.props.app.state.players.find(p => p.Name === game.TeamMate.Name).Score})
               </div>
             </div>
             <div className="net">Game {cur + 1}</div>
-            <div className="side" onClick={() => this.props.app.winner(cur, false)}>
+            <div className="side" onClick={() => this.setWinner(cur, false)}>
               <div className={`player${outWinner}`}>
-                {game.Opp1.Name} ({game.Opp1.Score})
+                {game.Opp1.Name} ({this.props.app.state.players.find(p => p.Name === game.Opp1.Name).Score})
               </div>
               <div className={`player${outWinner}`}>
-                {game.Opp2.Name} ({game.Opp2.Score})
+                {game.Opp2.Name} ({this.props.app.state.players.find(p => p.Name === game.Opp2.Name).Score})
               </div>
             </div>
             <div className="sideTitleBottom">{game.OutSide}</div>
@@ -77,19 +77,19 @@ class CurrentGame extends React.Component {
             <div className="sideTitleTop">{game.OutSide}</div>
             <div className="side" onClick={() => this.setWinner(cur, false)}>
               <div className={`player${outWinner}`}>
-                {game.Opp1.Name} ({game.Opp1.Score})
+                {game.Opp1.Name} ({this.props.app.state.players.find(p => p.Name === game.Opp1.Name).Score})
               </div>
               <div className={`player${outWinner}`}>
-                {game.Opp2.Name} ({game.Opp2.Score})
+                {game.Opp2.Name} ({this.props.app.state.players.find(p => p.Name === game.Opp2.Name).Score})
               </div>
             </div>
             <div className="net">Game {cur + 1}</div>
             <div className="side" onClick={() => this.setWinner(cur, true)}>
               <div className={`player server${inWinner}`}>
-                {game.Server.Name} ({game.Server.Score})
+                {game.Server.Name} ({this.props.app.state.players.find(p => p.Name === game.Server.Name).Score})
               </div>
               <div className={`player${inWinner}`}>
-                {game.TeamMate.Name} ({game.TeamMate.Score})
+                {game.TeamMate.Name} ({this.props.app.state.players.find(p => p.Name === game.TeamMate.Name).Score})
               </div>
             </div>
             <div className="sideTitleBottom">{game.InSide}</div>
