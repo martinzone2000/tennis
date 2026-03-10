@@ -245,8 +245,8 @@ class App extends React.Component {
       console.log("User elected the shuffled games so ripple sort")
       players = this.rippleSort(players,2) //deterministic sort swapping players starting at 1 to get server serving to last bench guy (even servers)
       bracket = this.playerRotation(players); 
-      flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
-      flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North')) //was 324. swap next round here to even opponents over 20 games in case we quit early
+      flights = flights.concat(this.getRound(bracket,[3,4,2],'North', 'South'))
+      flights = flights.concat(this.getRound(bracket,[4,2,3], 'South', 'North')) //was 324. swap next round here to even opponents over 20 games in case we quit early
     } else {
       flights = flights.concat(this.getRound(bracket,[3,2,4],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
