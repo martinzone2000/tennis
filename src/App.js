@@ -57,7 +57,7 @@ class App extends React.Component {
     // Cleanup to prevent memory leaks if the component unmounts
     if (this.saveTimer) clearTimeout(this.saveTimer);
   }
-  
+
   componentDidMount() {
     /*
     Called once, immediately after the component is mounted (inserted into the DOM),
@@ -264,8 +264,8 @@ class App extends React.Component {
       flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North'))
     }
     if(this.flightTypeRef.current === flightGeneration.SHUFFLED) {
-      flights = flights.concat(this.getRound(bracket,[3,4,2],'North', 'South')) 
-      flights = flights.concat(this.getRound(bracket,[4,2,3], 'South', 'North')) 
+      flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South')) 
+      flights = flights.concat(this.getRound(bracket,[3,4,2], 'South', 'North')) 
     } else {
       flights = flights.concat(this.getRound(bracket,[4,2,3],'North', 'South'))
       flights = flights.concat(this.getRound(bracket,[4,3,2], 'South', 'North'))
